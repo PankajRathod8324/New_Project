@@ -1,0 +1,69 @@
+@model DAL.ViewModel.MenuModifierGroupVM
+
+<thead class="bg-light">
+    <tr>
+        <th class="">
+            <input class="form-check-input ps-3 ms-1 me-5" type="checkbox" id="selectAll"> Name
+        </th>
+        <th>Unit</th>
+        <th>Rate</th>
+        <th>Quantity</th>
+    </tr>
+</thead>
+
+<tbody>
+    @foreach (var menumodifier in Model.menuModifiers.ToList())
+    {
+        <tr data-id="@menumodifier.ModifierId" data-name="@menumodifier.ModifierName" data-unit="@menumodifier.UnitName"
+            data-rate="@menumodifier.ModifierRate" data-quantity="@menumodifier.Quantity">
+            <td>
+                <div class="d-flex align-items-center">
+                    <input class="checkclass form-check-input ps-3 ms-1 me-4" type="checkbox" name="chkItem" />
+                    <div>
+                        <p class="text-secondary mb-1">@menumodifier.ModifierName</p>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                <p class="fw-normal mb-1">@menumodifier.UnitName</p>
+            </td>
+
+            <td>
+                <p class="fw-normal mb-1">@menumodifier.ModifierRate</p>
+            </td>
+
+            <td>
+                <p class="fw-normal mb-1">@menumodifier.Quantity</p>
+            </td>
+        </tr>
+    }
+</tbody>
+
+<script>
+    $(document).ready(function () {
+        $('#selectAll').click(function () {
+            $('input[name="chkItem"]').prop('checked', this.checked);
+        });
+
+        // If selectAll is Pressed  And Perticuler checkbox is unchecked then selectAll checkbox also unchecked
+        document.querySelectorAll('input[name="chkItem"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                if (!this.checked) {
+                    document.getElementById('selectAll').checked = false;
+                }
+            });
+        });
+        // If All checkbox is checked then selectAll checkbox also checked
+        document.querySelectorAll('input[name="chkItem"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                let flag = Array.from(document.querySelectorAll('input[name="chkItem"]')).every(function (checkbox) {
+                    return checkbox.checked;
+                });
+                if (this.checked && flag) {
+                    document.getElementById('selectAll').checked = true;
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,93 @@
+@model DAL.ViewModel.MenuModifierGroupVM
+
+<form id="editModifierGroupForm">
+    <div class="modal-body">
+        <input type="hidden" asp-for="ModifierGroupId">
+
+        <div class="form-floating mb-3">
+            <input type="text" asp-for="ModifierGroupName" class="form-control">
+            <label asp-for="ModifierGroupName">Name*</label>
+        </div>
+
+        <div class="form-outline mb-4">
+            <textarea class="form-control" asp-for="ModifierGroupDecription" rows="4"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <h6>Selected Modifiers:</h6>
+            <div id="selectedModifiersList" class="d-flex flex-wrap gap-2">
+                @foreach (var modifier in Model.ModifierIds)
+                {
+                    <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2"
+                        data-id="@modifier">
+                        <span class="me-2">@modifier</span>
+                        <span class="text-danger remove-modifier" style="cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                }
+            </div>
+            <input type="hidden" asp-for="ModifierIds">
+        </div>
+
+        <!-- Button to Add Modifier -->
+        <button type="button" class="btn btn-outline-primary mt-2" id="addModifierBtn">
+            <i class="fas fa-plus"></i> Add Modifier
+        </button>
+
+        <div id="modifierPartialContainer"></div> <!-- Partial View Container -->
+    </div>
+</form>
+
+
+<script>
+
+    $(document).on('click', '#addModifierBtn', function () {
+        $.ajax({
+            url: `/Menu/GetAllModifier`,
+            type: 'GET',
+            success: function (data) {
+                $('#modifierPartialContainer').html(data); // Inject Partial View
+                $('#addModifierModal').modal('show'); // Show Add Modifier Modal
+            },
+            error: function (xhr) {
+                console.error('Error fetching add modifier partial:', xhr.responseText);    
+            }
+        });
+    });
+
+
+
+    // Save Selected Modifiers
+    $(document).on('click', '#saveModifiers', function () {
+        let selectedModifiers = [];
+
+        $('.modifier-checkbox:checked').each(function () {
+            selectedModifiers.push({
+                id: $(this).val(),
+                name: $(this).next('label').text().trim()
+            });
+        });
+
+        console.log("Selected Modifiers:", selectedModifiers);
+
+        // Update the main modal with selected modifiers
+        let selectedHtml = "";
+        selectedModifiers.forEach(modifier => {
+            selectedHtml += `
+                <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2" data-id="${modifier.id}">
+                    <span class="me-2">${modifier.name}</span>
+                    <span class="text-danger remove-modifier" style="cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+            `;
+        });
+
+        $('#selectedModifiersList').html(selectedHtml);
+        $('#selectedModifierIds').val(selectedModifiers.map(m => m.id).join(',')); // Hidden Input Update
+
+        $('#addModifierModal').modal('hide'); // Close Add Modifier Modal
+    });
+
+</script>
