@@ -33,3 +33,4 @@ D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\BLL\obj\Debug\net7.0\refint\B
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\BLL\obj\Debug\net7.0\BLL.pdb
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\BLL\obj\Debug\net7.0\BLL.genruntimeconfig.cache
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\BLL\obj\Debug\net7.0\ref\BLL.dll
+D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\BLL\obj\Debug\net7.0\BLL.sourcelink.json

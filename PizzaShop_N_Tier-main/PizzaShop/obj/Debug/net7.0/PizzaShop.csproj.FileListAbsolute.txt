@@ -664,3 +664,4 @@ D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\PizzaShop\obj\Debug\net7.0\re
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\PizzaShop\obj\Debug\net7.0\PizzaShop.pdb
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\PizzaShop\obj\Debug\net7.0\PizzaShop.genruntimeconfig.cache
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\PizzaShop\obj\Debug\net7.0\ref\PizzaShop.dll
+D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\PizzaShop\obj\Debug\net7.0\PizzaShop.sourcelink.json

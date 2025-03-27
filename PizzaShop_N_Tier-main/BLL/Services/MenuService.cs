@@ -140,9 +140,35 @@ public class MenuService : IMenuService
     //     return _menuRepository.GetModifierNameById(modifierId, modifierGroups);
     // }
 
-    public List<MenuModifier> GetModifiers()
+    public IPagedList<MenuModifierGroupVM> GetModifiers(UserFilterOptions filterOptions)
     {
-        return _menuRepository.GetModifiers();
+        
+        var modifier = _menuRepository.GetModifiers().AsQueryable();
+        if (!string.IsNullOrEmpty(filterOptions.Search))
+        {
+            string searchLower = filterOptions.Search.ToLower();
+            modifier = modifier.Where(u => u.ModifierName.ToLower().Contains(searchLower) ||
+                                     u.ModifierRate.ToString().ToLower().Contains(searchLower));
+        }
+
+        // Get total count and handle page size dynamically
+        int totalTables = modifier.Count();
+        int pageSize = filterOptions.PageSize > 0 ? Math.Min(filterOptions.PageSize, totalTables) : 10; // Default 10
+
+       var modifierItems = modifier.Select(item => new MenuModifierGroupVM
+        {
+            ModifierGroupId = item.ModifierGroupId ?? 0, // Avoid null exception
+            ModifierId = item.ModifierId,
+            ModifierName = item.ModifierName,
+            ModifierRate = item.ModifierRate,
+            UnitId = item.UnitId,
+            Quantity = item.Quantity,
+            ModifierDecription = item.ModifierDecription,
+            UnitName = item.UnitId.HasValue ? (_menuRepository.GetUnitById(item.UnitId.Value) ?? "No Unit") : "No Unit"
+        }).ToPagedList(filterOptions.Page.Value, filterOptions.PageSize);
+
+
+        return modifierItems;
     }
     public string GetUnitById(int unitId)
     {

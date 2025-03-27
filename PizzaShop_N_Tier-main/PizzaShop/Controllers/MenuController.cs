@@ -363,41 +363,21 @@ public class MenuController : Controller
     }
 
     [Authorize]
-    public IActionResult GetAllModifier()
+    public IActionResult GetAllModifier(UserFilterOptions filterOptions)
     {
-        var modifiers = _menuService.GetModifiers();
+        filterOptions.Page ??= 1;
+        filterOptions.PageSize = filterOptions.PageSize != 0 ? filterOptions.PageSize : 10; // Default page size
 
-        if (modifiers == null || !modifiers.Any())
-        {
-            Console.WriteLine(" No Modifiers Found!");
-            return NotFound("No modifiers found.");
-        }
-
-        Console.WriteLine(" Modifiers Retrieved:");
-        foreach (var modifier in modifiers)
-        {
-            Console.WriteLine(modifier.ModifierName);
-        }
-
-        var modifierItems = modifiers.Select(item => new MenuModifierGroupVM
-        {
-            ModifierGroupId = item.ModifierGroupId ?? 0, // Avoid null exception
-            ModifierId = item.ModifierId,
-            ModifierName = item.ModifierName,
-            ModifierRate = item.ModifierRate,
-            UnitId = item.UnitId,
-            Quantity = item.Quantity,
-            ModifierDecription = item.ModifierDecription,
-            UnitName = item.UnitId.HasValue ? (_menuService.GetUnitById(item.UnitId.Value) ?? "No Unit") : "No Unit"
-        }).ToList();
+        var modifiers = _menuService.GetModifiers(filterOptions);
 
         var modifierVM = new MenuModifierGroupVM
         {
-            menuModifiers = modifierItems
+            Modifier = modifiers
         };
 
-        return PartialView("_MenuModifierByModifierGroup", modifierVM);
+        return PartialView("_MenuModifierByModifierGroup", modifiers);
     }
+   
 
     [Authorize]
     public IActionResult GetModifiersByGroup(int groupId, UserFilterOptions filterOptions)

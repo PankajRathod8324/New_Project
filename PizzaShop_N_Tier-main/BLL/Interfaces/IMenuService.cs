@@ -33,7 +33,7 @@ public interface IMenuService
 
   public IEnumerable<Itemtype> GetAllItemTypes();
 
-  List<MenuModifier> GetModifiers();
+  IPagedList<MenuModifierGroupVM> GetModifiers(UserFilterOptions filterOptions);
 
   public IEnumerable<Unit> GetAllUnits();
 

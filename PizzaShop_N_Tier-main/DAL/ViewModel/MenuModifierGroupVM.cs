@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DAL.Models;
+using X.PagedList;
 
 namespace DAL.ViewModel
 {
@@ -28,7 +29,7 @@ namespace DAL.ViewModel
 
         public List<MenuModifierGroupVM>? menuModifiers { get; set; }
 
-       
+        public IPagedList<MenuModifierGroupVM>? Modifier { get; set; }
 
         public int ModifierId { get; set; }
 

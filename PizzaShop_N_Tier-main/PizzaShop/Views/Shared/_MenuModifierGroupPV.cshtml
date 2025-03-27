@@ -412,7 +412,35 @@
     <script>
 
         $(document).ready(function () {
-            
+             $("#pageSizeDropdown").change(function (event) {
+                event.preventDefault();
+
+                var selectedPageSize = $(this).val();
+                var currentPage = 1;
+                console.log("dropdown");
+                console.log(selectedPageSize);
+
+
+                $.ajax({
+                    url: '@Url.Action("Menu", "GetAllModifier")',
+                    type: 'GET',
+                    data: {
+                        PageSize: selectedPageSize,
+                        PageNumber: currentPage
+                    },
+                    beforeSend: function () {
+                        $("#pageSizeDropdown").prop("disabled", true);
+                    },
+                    success: function (data) {
+                        $("#modifierTable").html(data);
+                        $("#pageSizeDropdown").prop("disabled", false);
+                    },
+                    error: function () {
+                        alert("Failed to update items per page.");
+                        $("#pageSizeDropdown").prop("disabled", false);
+                    }
+                });
+            });
 
             $.ajax({
                 url: '@Url.Action("MenuModifier", "Menu")',
@@ -512,48 +540,26 @@
             });
 
         });
-        let selectedModifiers = []; // Store selected modifier objects
-
+        @* let selectedModifiers = []; // Store selected modifier objects *@
         function AddModifierToModal() {
-            let selectedRows = $('#modifierTable').find('tr').has(':checkbox:checked'); // Ensure selection
+    if (!window.selectedModifiers) {
+        console.warn("No selected modifiers found.");
+        return;
+    }
 
-            console.log("Selected Rows Count: ", selectedRows.length); // Debugging
+    console.log("Selected Modifiers Across Pages: ", window.selectedModifiers);
+    updatePreviousModal();
+}
 
-            selectedRows.each(function () {
-                let row = $(this);
-                let modifierId = row.data('id');
-                let modifierName = row.data('name');
-                let unit = row.data('unit');
-                let rate = row.data('rate');
-                let quantity = row.data('quantity');
+function updatePreviousModal() {
+    let modalBody = $('#selectedModifiersList');
+    let hiddenInputsContainer = $('#selectedModifierInputs');
+    modalBody.empty();
+    hiddenInputsContainer.empty();
 
-                console.log("Processing Modifier:", { modifierId, modifierName }); // Debugging
-
-                // Check if the modifier is already added to prevent duplicates
-                if (!selectedModifiers.some(modifier => modifier.modifierId === modifierId)) {
-                    selectedModifiers.push({
-                        modifierId: modifierId,
-                        name: modifierName,
-                        unit: unit,
-                        rate: rate,
-                        quantity: quantity
-                    });
-                }
-            });
-
-            console.log("Updated selectedModifiers Array: ", selectedModifiers);
-            updatePreviousModal();
-        }
-
-        function updatePreviousModal() {
-            let modalBody = $('#selectedModifiersList');
-            let hiddenInputsContainer = $('#selectedModifierInputs'); // Hidden inputs for form submission
-            modalBody.empty();
-            hiddenInputsContainer.empty();
-
-            if (selectedModifiers.length > 0) {
-                selectedModifiers.forEach(modifier => {
-                    let modifierElement = `
+    if (window.selectedModifiers.length > 0) {
+        window.selectedModifiers.forEach(modifier => {
+            let modifierElement = `
                 <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2" data-id="${modifier.modifierId}">
                     <span class="me-2">${modifier.name}</span>
                     <span class="text-danger remove-modifier" style="cursor: pointer;">
@@ -561,26 +567,28 @@
                     </span>
                 </div>
             `;
-                    modalBody.append(modifierElement);
-                    hiddenInputsContainer.append(`<input type="hidden" name="ModifierIds" value="${modifier.modifierId}">`);
-                });
+            modalBody.append(modifierElement);
+            hiddenInputsContainer.append(`<input type="hidden" name="ModifierIds" value="${modifier.modifierId}">`);
+        });
 
-                $('.remove-modifier').off('click').on('click', function () {
-                    let parentDiv = $(this).parent();
-                    let modifierId = parseInt(parentDiv.attr('data-id'));
+        // Handle Removal of Modifiers from Modal
+        $('.remove-modifier').off('click').on('click', function () {
+            let parentDiv = $(this).parent();
+            let modifierId = parseInt(parentDiv.attr('data-id'));
 
-                    // Remove from selectedModifiers array
-                    selectedModifiers = selectedModifiers.filter(modifier => modifier.modifierId !== modifierId);
-                    console.log("After removal: ", selectedModifiers);
+            // Remove from selectedModifiers array
+            window.selectedModifiers = window.selectedModifiers.filter(modifier => modifier.modifierId !== modifierId);
 
-                    // Remove from UI and hidden input fields
-                    parentDiv.remove();
-                    hiddenInputsContainer.find(`input[value="${modifierId}"]`).remove();
-                });
-            } else {
-                modalBody.html('<p class="text-muted">No modifiers selected.</p>');
-            }
-        }
+            // Remove from UI and hidden input fields
+            parentDiv.remove();
+            hiddenInputsContainer.find(`input[value="${modifierId}"]`).remove();
+
+            console.log("After removal: ", window.selectedModifiers);
+        });
+    } else {
+        modalBody.html('<p class="text-muted">No modifiers selected.</p>');
+    }
+}
 
         $('#saveModifiers').click(function () {
             let selectedModifierIds = selectedModifiers.map(modifier => modifier.modifierId); // Extract only IDs
@@ -640,22 +648,33 @@
         });
 
 
-        function GetModifier() {
-            console.log("HOmenefhjmdejhedj,");
+       function GetModifier() {
+    console.log("Fetching modifiers...");
 
-            $.ajax({
-                url: '@Url.Action("GetAllModifier", "Menu")',
-                type: 'GET',
-                success: function (data) {
-
-                    $('#modifierTable').append(data);
-                   
-                },
-                error: function (xhr, status, error) {
-                    console.error('error Feching items:', error);
-                }
-            });
+    $.ajax({
+        url: '@Url.Action("GetAllModifier", "Menu")',
+        type: 'GET',
+        success: function (data) {
+            $('#modifierTable').html(data);
+            restoreCheckboxState(); // Restore selected checkboxes after loading data
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Fetching items:', error);
         }
+    });
+}
+function restoreCheckboxState() {
+    let selectedModifiers = window.selectedModifiers; // Get selected modifiers
+
+    selectedModifiers.forEach(modifier => {
+        let row = $(`#modifierTable tr[data-id="${modifier.modifierId}"]`);
+        row.find('input[type="checkbox"]').prop('checked', true);
+    });
+
+    console.log("Checkbox state restored for:", selectedModifiers);
+}
+
+
         function DeleteModifiers() {
 
             let Modifier = [];

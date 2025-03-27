@@ -27,3 +27,4 @@ D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\DAL\obj\Debug\net7.0\refint\D
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\DAL\obj\Debug\net7.0\DAL.pdb
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\DAL\obj\Debug\net7.0\DAL.genruntimeconfig.cache
 D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\DAL\obj\Debug\net7.0\ref\DAL.dll
+D:\PizzaShop_N_Tier-main (1)\PizzaShop_N_Tier-main\DAL\obj\Debug\net7.0\DAL.sourcelink.json
