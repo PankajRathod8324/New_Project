@@ -15,10 +15,14 @@ public interface IMenuService
 
   void UpdateCategory(MenuCategoryVM category);
 
+   int GetTotalModifierCount();
+
   void DeleteCategory(MenuCategory category);
   List<MenuItem> GetItemsByCategoryId(int categoryId);
 
   List<ItemModifierGroup> GetItemModifier(int itemid);
+
+  MenuCategoryVM GetEditItemViewModel(int itemId);
   void AddMenuItem(MenuItem menuItem);
 
   void AddMenuItemModifierGroup(ItemModifierGroup menuitemmodifier);

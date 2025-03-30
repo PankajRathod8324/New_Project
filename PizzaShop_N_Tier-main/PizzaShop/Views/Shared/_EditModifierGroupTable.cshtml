@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Modifier Group</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <table class="table">
+            <thead class="bg-light">
+                <tr>
+                    <th>
+                        <input class="form-check-input me-2" type="checkbox" id="selectAll"> Name
+                    </th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var menumodifier in Model.Data.Modifier)
+                {
+                   bool isChecked = Model.Data.ModifierIds.Contains(menumodifier.ModifierId); // ✅ Fix this
+// Check if modifier is associated
+
+                    <tr data-id="@menumodifier.ModifierId" data-name="@menumodifier.ModifierName"
+                        data-unit="@menumodifier.UnitName" data-rate="@menumodifier.ModifierRate"
+                        data-quantity="@menumodifier.Quantity">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <input class="checkclass form-check-input me-3" type="checkbox" name="chkItem"
+                                    @(isChecked ? "checked" : "") />
+                                <p class="text-secondary mb-0">@menumodifier.ModifierName</p>
+                            </div>
+                        </td>
+                        <td><p class="fw-normal mb-1">@menumodifier.UnitName</p></td>
+                        <td><p class="fw-normal mb-1">@menumodifier.ModifierRate</p></td>
+                        <td><p class="fw-normal mb-1">@menumodifier.Quantity</p></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-end align-items-center my-3 gap-2">
+            <form id="paginationForm" method="get" class="d-flex align-items-center me-3">
+                <span class="me-2">Items per page:</span>
+                <select id="pageSizeDropdownForModifier" class="form-select form-select-sm w-auto me-3">
+                    <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                    <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                    <option value="15" selected="@(ViewBag.PageSize == 15)">15</option>
+                </select>
+
+                <span id="pagination-summary" class="text-muted">
+                    Showing @(Model.PageSize * (Model.PageNumber - 1) + 1) -
+                    @((Model.PageSize * Model.PageNumber) > Model.TotalItemCount ? Model.TotalItemCount :
+                                        (Model.PageSize * Model.PageNumber))
+                    of @Model.TotalItemCount results
+                </span>
+            </form>
+
+            <div id="paginationContainer">
+                @if (Model.HasPreviousPage)
+                {
+                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId" data-page="@(Model.PageNumber - 1)">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                }
+
+                <span class="mx-2">Page @Model.PageNumber of @Model.PageCount</span>
+
+                @if (Model.HasNextPage)
+                {
+                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId" data-page="@(Model.PageNumber + 1)">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+ <script>
+    $(document).ready(function () {
+        // Initialize selectedModifiers with already associated ModifierIds
+       window.editSelectedModifiers = @Html.Raw(Json.Serialize(Model.Data.ModifierIds));
+
+        console.log("Initial selected modifiers:", window.editSelectedModifiers);
+
+        // Mark checkboxes as checked based on the initialized array
+        $("input[name='chkItem']").each(function () {
+            let modifierId = $(this).closest("tr").data("id");
+            if (window.editSelectedModifiers.includes(modifierId)) {
+                $(this).prop("checked", true);
+            }
+        });
+
+        // Select/Deselect All Checkboxes
+        $("#selectAll").change(function () {
+            $("input[name='chkItem']").prop("checked", this.checked).trigger("change");
+        });
+
+        $(document).on("change", 'input[name="chkItem"]', function () {
+            let modifierId = $(this).closest("tr").data("id");
+
+            if (this.checked) {
+                if (!window.editSelectedModifiers.includes(modifierId)) {
+                    window.editSelectedModifiers.push(modifierId);
+                }
+            } else {
+                window.editSelectedModifiers = window.editSelectedModifiers.filter(id => id !== modifierId);
+            }
+
+            console.log("Updated selected modifiers:", window.editSelectedModifiers);
+        });
+        $(".pagination-btn-edit").click(function (e) {
+            e.preventDefault();
+            let page = $(this).data("page");
+            loadModifiers(page);
+        });
+
+        $("#pageSizeDropdownForModifier").change(function () {
+            loadModifiers(1);
+        });
+    });
+
+    function loadModifiers(page = 1) {
+        let modifierGroupId = $(".pagination-btn-edit").attr("data-id");
+
+        $.ajax({
+            url: '/Menu/GetEditAllModifier',
+            type: 'GET',
+            data: { page: page, modifierGroupId: modifierGroupId, pageSize: $("#pageSizeDropdownForModifier").val() },
+            success: function (data) {
+                console.log("Success");
+                $("#modifierTableContainer").html(data);
+                restoreCheckboxState();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching modifier list:', error);
+            }
+        });
+    }
+
+    function restoreCheckboxState() {
+        window.selectedModifiers.forEach(id => {
+            $(`tr[data-id="${id}"] input[name='chkItem']`).prop("checked", true);
+        });
+    }
+</script>
+
+
+</body>
+
+</html>

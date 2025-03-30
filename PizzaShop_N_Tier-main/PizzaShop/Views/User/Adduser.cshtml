@@ -153,7 +153,8 @@
                 <div class="row me-5 ms-4 mt-1">
                     <div class="file-upload text-center mt-3">
                         <div class="preview-container">
-                            <img id="profilePreviewAdd" src="" alt="Profile Image" style="display: none;">
+                            <img id="profilePreviewAdd" src="" alt="Profile Image"
+                                style="display: none; max-width: 100px;">
                             <span class="remove-image" id="removeImageAdd" style="display: none;">&times;</span>
                         </div>
                         <label class="btn btn-outline-primary mt-2">Upload Profile Image
@@ -161,9 +162,7 @@
                         </label>
                         <input type="hidden" asp-for="ProfilePicture" id="ProfilePictureAdd">
                     </div>
-
                 </div>
-
                 <div class="row ms-2 me-5 ">
                     <div class="col ms-3 mt-4">
                         <div class="form-floating">
@@ -256,16 +255,35 @@
         <script src="~/js/userPage.js"></script>
         <script>
             $(document).ready(function () {
-                $("#fileInputAdd").change(function () {
-                    var input = this;
-                    if (input.files && input.files[0]) {
-                        var reader = new FileReader();
+                document.getElementById("fileInputAdd").addEventListener("change", function (event) {
+                    const file = event.target.files[0];
+
+                    if (file) {
+                        const validExtensions = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+
+                        if (!validExtensions.includes(file.type)) {
+                            toastr.error("Only image files (JPEG, PNG, GIF, WebP, SVG) are allowed!");
+                            event.target.value = ""; // Clear the input field
+                            return;
+                        }
+
+                        // Display the image preview
+                        const reader = new FileReader();
                         reader.onload = function (e) {
-                            $("#profilePreviewAdd").attr("src", e.target.result).show();
-                            $("#removeImageAdd").show();
+                            const preview = document.getElementById("profilePreviewAdd");
+                            preview.src = e.target.result;
+                            preview.style.display = "block";
+                            document.getElementById("removeImageAdd").style.display = "block";
                         };
-                        reader.readAsDataURL(input.files[0]);
+                        reader.readAsDataURL(file);
                     }
+                });
+
+                // Remove image preview
+                document.getElementById("removeImageAdd").addEventListener("click", function () {
+                    document.getElementById("profilePreviewAdd").style.display = "none";
+                    document.getElementById("removeImageAdd").style.display = "none";
+                    document.getElementById("fileInputAdd").value = "";
                 });
 
                 $("#removeImageAdd").click(function () {

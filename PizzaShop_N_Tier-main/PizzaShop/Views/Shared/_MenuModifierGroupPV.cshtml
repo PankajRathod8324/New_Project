@@ -159,7 +159,7 @@
                         <div class="col-auto text-end">
                             <a data-bs-toggle="modal" data-bs-target="#newmodifierModal">
                                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
-                                    <i class="fa-solid fa-plus"></i>New Item
+                                    <i class="fa-solid fa-plus"></i>New Modifier
                                 </button>
                             </a>
                         </div>
@@ -259,6 +259,7 @@
 
                     </table>
                 </div>
+                
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -404,7 +405,7 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
 
 
 
@@ -412,6 +413,12 @@
     <script>
 
         $(document).ready(function () {
+             $(".pagination-btn-edit").click(function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+                console.log("Page number:", page);
+                loadModifiers(page);
+            });
              $("#pageSizeDropdown").change(function (event) {
                 event.preventDefault();
 

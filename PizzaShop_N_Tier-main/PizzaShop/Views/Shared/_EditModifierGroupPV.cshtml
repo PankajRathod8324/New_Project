@@ -16,11 +16,11 @@
         <div class="mb-3">
             <h6>Selected Modifiers:</h6>
             <div id="selectedModifiersList" class="d-flex flex-wrap gap-2">
-                @foreach (var modifier in Model.ModifierIds)
+                @foreach (var modifier in Model.Modifiers)
                 {
                     <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2"
-                        data-id="@modifier">
-                        <span class="me-2">@modifier</span>
+                        data-id="@modifier.ModifierId">
+                        <span class="me-2">@modifier.ModifierName</span>
                         <span class="text-danger remove-modifier" style="cursor: pointer;">
                             <i class="fas fa-times"></i>
                         </span>
@@ -31,63 +31,129 @@
         </div>
 
         <!-- Button to Add Modifier -->
-        <button type="button" class="btn btn-outline-primary mt-2" id="addModifierBtn">
+        <button type="button" class="btn btn-outline-primary mt-2" data-id="@Model.ModifierGroupId" id="addModifierBtn">
             <i class="fas fa-plus"></i> Add Modifier
         </button>
 
-        <div id="modifierPartialContainer"></div> <!-- Partial View Container -->
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
     </div>
 </form>
 
+<!-- Modifier Selection Modal -->
+<div class="modal fade" id="allModifiersModal" tabindex="-1" aria-labelledby="allModifiersLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="allModifiersLabel">Select Modifiers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="text" id="searchQuery" class="form-control mb-3" placeholder="Search Modifier">
+                <div id="modifierTableContainer">
+                    <table id="modifierTable" class="table align-middle table-hover bg-white">
+                        <!-- Partial view will be loaded here -->
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addSelectedModifiers"
+                    onclick="AddModifiersToModal()">Add Selected</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
+    $(document).ready(function () {
+        console.log("Hello");
+        $(".pagination-btn-edit").click(function (e) {
+            e.preventDefault();
+            let page = $(this).data("page");
+            console.log("Page number:", page);
+            loadModifiers(page);
+        });
+    });
 
     $(document).on('click', '#addModifierBtn', function () {
+        let modifierGroupId = $(this).data('id');
+        console.log("Modifier Group ID:", modifierGroupId);
         $.ajax({
-            url: `/Menu/GetAllModifier`,
+            url: '/Menu/GetEditAllModifier',
             type: 'GET',
+            data: { modifierGroupId: modifierGroupId },
+            beforeSend: function () {
+                $('#modifierTableContainer').html('<p class="text-center">Loading...</p>');
+            },
             success: function (data) {
-                $('#modifierPartialContainer').html(data); // Inject Partial View
-                $('#addModifierModal').modal('show'); // Show Add Modifier Modal
+                $('#modifierTableContainer').html(data);
+                var myModal = new bootstrap.Modal(document.getElementById('allModifiersModal'));
+                myModal.show();
             },
             error: function (xhr) {
-                console.error('Error fetching add modifier partial:', xhr.responseText);    
+                console.error('Error fetching modifier list:', xhr.responseText);
             }
         });
     });
 
+    $('#allModifiersModal').on('hidden.bs.modal', function (e) {
+        console.log('Modal closed');
+    });
 
+    function AddModifiersToModal() {
+        if (!window.editSelectedModifiers || window.editSelectedModifiers.length === 0) {
+            console.warn("No selected modifiers found.");
+            return;
+        }
 
-    // Save Selected Modifiers
-    $(document).on('click', '#saveModifiers', function () {
-        let selectedModifiers = [];
+        console.log("Selected Modifiers Across Pages: ", window.editSelectedModifiers);
+        updatePreviousModal();
 
-        $('.modifier-checkbox:checked').each(function () {
-            selectedModifiers.push({
-                id: $(this).val(),
-                name: $(this).next('label').text().trim()
-            });
-        });
+        // Close the modal properly
+        var myModal = new bootstrap.Modal(document.getElementById('allModifiersModal'));
+        myModal.hide();
+        console.log(myModal);
 
-        console.log("Selected Modifiers:", selectedModifiers);
+    }
 
-        // Update the main modal with selected modifiers
+    function updatePreviousModal() {
         let selectedHtml = "";
-        selectedModifiers.forEach(modifier => {
-            selectedHtml += `
-                <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2" data-id="${modifier.id}">
+        let hiddenInputsContainer = $('#selectedModifierInputs');
+
+        $('#selectedModifiersList').empty();
+        hiddenInputsContainer.empty();
+
+        window.editSelectedModifiers.forEach(modifier => {
+            let modifierElement = `
+                <div class="border border-dark rounded px-3 py-1 d-flex align-items-center bg-light me-2" data-id="${modifier.modifierId}">
                     <span class="me-2">${modifier.name}</span>
                     <span class="text-danger remove-modifier" style="cursor: pointer;">
                         <i class="fas fa-times"></i>
                     </span>
                 </div>
             `;
+            $('#selectedModifiersList').append(modifierElement);
+            hiddenInputsContainer.append(`<input type="hidden" name="ModifierIds" value="${modifier.modifierId}">`);
         });
 
-        $('#selectedModifiersList').html(selectedHtml);
-        $('#selectedModifierIds').val(selectedModifiers.map(m => m.id).join(',')); // Hidden Input Update
+        // Handle Removal of Modifiers from Modal
+        $('.remove-modifier').off('click').on('click', function () {
+            let parentDiv = $(this).parent();
+            let modifierId = parseInt(parentDiv.attr('data-id'));
 
-        $('#addModifierModal').modal('hide'); // Close Add Modifier Modal
-    });
+            // Remove from selectedModifiers array
+            window.editSelectedModifiers = window.editSelectedModifiers.filter(modifier => modifier.modifierId !== modifierId);
 
+            // Remove from UI and hidden input fields
+            parentDiv.remove();
+            hiddenInputsContainer.find(`input[value="${modifierId}"]`).remove();
+
+            console.log("After removal: ", window.editSelectedModifiers);
+        });
+    }
 </script>

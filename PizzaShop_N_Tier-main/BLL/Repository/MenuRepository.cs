@@ -36,26 +36,30 @@ public class MenuRepository : IMenuRepository
     public decimal GetModifierPriceById(int modifierId)
     {
         var modifierPrice = (from modifier in _context.MenuModifiers
-                         where modifier.ModifierId == modifierId
-                         select modifier.ModifierRate).FirstOrDefault();
+                             where modifier.ModifierId == modifierId
+                             select modifier.ModifierRate).FirstOrDefault();
         return (decimal)modifierPrice;
     }
 
+    public int GetTotalModifierCount()
+    {
+        return _context.MenuModifiers.Count();  // Replace 'Modifiers' with your actual DbSet name
+    }
     public int GetModifierQuantityById(int modifierId)
     {
         var modifierQuantity = (from modifier in _context.MenuModifiers
-                            where modifier.ModifierId == modifierId
-                            select modifier.Quantity).FirstOrDefault();
+                                where modifier.ModifierId == modifierId
+                                select modifier.Quantity).FirstOrDefault();
         return modifierQuantity;
     }
 
-     public string GetModifierNameById(int modifierId)
-     {
-            var modifierName = (from modifier in _context.MenuModifiers
-                                where modifier.ModifierId == modifierId
-                                select modifier.ModifierName).FirstOrDefault();
-            return modifierName;
-     }
+    public string GetModifierNameById(int modifierId)
+    {
+        var modifierName = (from modifier in _context.MenuModifiers
+                            where modifier.ModifierId == modifierId
+                            select modifier.ModifierName).FirstOrDefault();
+        return modifierName;
+    }
 
     public void AddCategory(MenuCategory category)
     {

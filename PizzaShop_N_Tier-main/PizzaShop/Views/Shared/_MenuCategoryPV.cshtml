@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PizzaShop.styles.css" asp-append-version="true" />
-    <script src='https://code.jquery.com/jquery-3.7.0.js'></script>
+    @* <script src='https://code.jquery.com/jquery-3.7.0.js'></script> *@
 </head>
 
 <body>
@@ -436,11 +436,19 @@
                                 <!-- Upload Image -->
                                 <div class="col-12">
                                     <label for="uploadImage" class="form-label">Upload Image</label>
-                                    <div class="border p-3 text-center" style="border-style: dotted;">
-                                        <input type="file" id="uploadImage" class="d-none">
+                                    <div class="border p-3 text-center" id="dropArea"
+                                        style="border-style: dotted; cursor: pointer;">
+                                        <input type="file" id="uploadImage" name="ImageFile" asp-for="ItemPhoto"
+                                            class="d-none" accept="image/*">
                                         <label for="uploadImage" class="text-muted" style="cursor: pointer;">
                                             📁 Drag and Drop or Browse files
                                         </label>
+                                        <div id="previewContainer" class="mt-2" style="display: none;">
+                                            <img id="imagePreview" src="" alt="Uploaded Image"
+                                                style="max-width: 100px;">
+                                            <span class="remove-image" id="removeImage"
+                                                style="cursor: pointer;">❌</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -493,6 +501,12 @@
             });
         });
         $(document).ready(function () {
+            $(".pagination-btn-edit").click(function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+                console.log("Page number:", page);
+                loadModifiers(page);
+            });
 
             var selectedCategoryId = null;
             console.log(selectedCategoryId);
@@ -798,6 +812,60 @@
                 }
             })
         }
+        const dropArea = document.getElementById("dropArea");
+        const fileInput = document.getElementById("uploadImage");
+        const previewContainer = document.getElementById("previewContainer");
+        const imagePreview = document.getElementById("imagePreview");
+        const removeImage = document.getElementById("removeImage");
+
+        const validExtensions = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+
+        function handleFileUpload(file) {
+            if (!validExtensions.includes(file.type)) {
+                toastr.error("Only image files (JPEG, PNG, GIF, WebP, SVG) are allowed!");
+                fileInput.value = ""; // Clear input
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                previewContainer.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // File selection via input
+        fileInput.addEventListener("change", function (event) {
+            if (event.target.files.length > 0) {
+                handleFileUpload(event.target.files[0]);
+            }
+        });
+
+        // Drag & Drop functionality
+        dropArea.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            dropArea.style.borderColor = "blue";
+        });
+
+        dropArea.addEventListener("dragleave", function () {
+            dropArea.style.borderColor = "";
+        });
+
+        dropArea.addEventListener("drop", function (e) {
+            e.preventDefault();
+            dropArea.style.borderColor = "";
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files; // Assign dropped file
+                handleFileUpload(e.dataTransfer.files[0]);
+            }
+        });
+
+        // Remove image preview
+        removeImage.addEventListener("click", function () {
+            previewContainer.style.display = "none";
+            fileInput.value = "";
+        });
 
 
 

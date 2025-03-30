@@ -14,10 +14,13 @@ namespace DAL.ViewModel
 
         public List<ItemModifierVM> ModifierGroupIds { get; set; }
 
-        public List<int> ModifierGroupIdForAdd {get; set;}
+        public List<int> ModifierGroupIdForAdd { get; set; }
 
         public int? CategoryId { get; set; }
 
+        [Required(ErrorMessage = "Item Name is required")]
+        // [UniqueItemName(ErrorMessage = "Item Name already exists")]
+        // Uncomment the above line after defining the UniqueItemName attribute or adding the correct namespace.
         public string ItemName { get; set; } = null!;
 
         public decimal Rate { get; set; }
@@ -37,6 +40,8 @@ namespace DAL.ViewModel
         public string? Description { get; set; }
 
         public string? CategoryPhoto { get; set; }
+
+        public string ItemPhoto {get; set;}
 
         public bool? IsFavourite { get; set; }
 

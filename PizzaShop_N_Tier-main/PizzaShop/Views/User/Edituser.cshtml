@@ -155,16 +155,19 @@
                 <div class="row me-5 ms-4 mt-1">
                     <div class="file-upload text-center mt-3">
                         <div class="preview-container">
-                            <img id="profilePreview" src="@Model.ProfilePicture" alt="Profile Image">
-                            <span class="remove-image" id="removeImage">&times;</span>
+                            <img id="profilePreview" src="@Model.ProfilePicture" alt="Profile Image"
+                                style="max-width: 100px; @(!string.IsNullOrEmpty(Model.ProfilePicture) ? "" : "display: none;")">
+                            <span class="remove-image" id="removeImage"
+                                style="@(!string.IsNullOrEmpty(Model.ProfilePicture) ? "" : "display: none;")">&times;</span>
                         </div>
                         <label class="btn btn-outline-primary mt-2">Upload Profile Image
                             <input type="file" id="fileInput" name="ProfileImage" accept="image/*">
                         </label>
                         <input type="hidden" asp-for="ProfilePicture" id="ProfilePicture">
                     </div>
-
                 </div>
+
+
 
                 <div class="row ms-2 me-5 ">
                     <div class="col ms-3 mt-4">
@@ -308,6 +311,38 @@
         $('form').submit(function () {
             $('#loadingSpinner').show();
         });
+        document.getElementById("fileInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const validExtensions = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+
+                if (!validExtensions.includes(file.type)) {
+                    toastr.error("Only image files (JPEG, PNG, GIF, WebP, SVG) are allowed!");
+                    event.target.value = ""; // Clear the input field
+                    return;
+                }
+
+                // Display the image preview
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById("profilePreview");
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                    document.getElementById("removeImage").style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Remove image preview
+        document.getElementById("removeImage").addEventListener("click", function () {
+            document.getElementById("profilePreview").style.display = "none";
+            document.getElementById("removeImage").style.display = "none";
+            document.getElementById("fileInput").value = "";
+            document.getElementById("ProfilePicture").value = ""; // Clear hidden input field
+        });
+
     </script>
 </body>
 

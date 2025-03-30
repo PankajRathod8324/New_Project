@@ -13,6 +13,8 @@ namespace DAL.ViewModel
         public List<ItemModifierVM>? itemModifierGroups { get; set; }
 
          public List<int> ModifierIds { get; set; }
+
+           public List<ModifierVM> Modifiers { get; set; }
         public int ModifierGroupId { get; set; }
 
          public int ItemId { get; set; }

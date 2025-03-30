@@ -432,6 +432,18 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-YZ5mTpy5wJtaFEnhTwGDj8TAJHeOh0Nc41\u002B/aRlpTsI="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"407315"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022YZ5mTpy5wJtaFEnhTwGDj8TAJHeOh0Nc41\u002B/aRlpTsI=\u0022"},{"Name":"Last-Modified","Value":"Wed, 26 Mar 2025 16:31:36 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/PizzaShop/images/0dd852a1-d0a8-4622-874c-48663529a7fe_pexels-lucie-liz-3165335.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\0dd852a1-d0a8-4622-874c-48663529a7fe_pexels-lucie-liz-3165335.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-SbxHQhQEUs6Ng\u002BSe3a43FuaMH\u002B7FsZgGcNL8T7ESo0c="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"878669"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022SbxHQhQEUs6Ng\u002BSe3a43FuaMH\u002B7FsZgGcNL8T7ESo0c=\u0022"},{"Name":"Last-Modified","Value":"Sun, 30 Mar 2025 19:09:08 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/PizzaShop/images/0dd852a1-d0a8-4622-874c-48663529a7fe_pexels-lucie-liz-3165335.nwau5fnicj.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\0dd852a1-d0a8-4622-874c-48663529a7fe_pexels-lucie-liz-3165335.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"nwau5fnicj"},{"Name":"integrity","Value":"sha256-SbxHQhQEUs6Ng\u002BSe3a43FuaMH\u002B7FsZgGcNL8T7ESo0c="},{"Name":"label","Value":"_content/PizzaShop/images/0dd852a1-d0a8-4622-874c-48663529a7fe_pexels-lucie-liz-3165335.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"878669"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022SbxHQhQEUs6Ng\u002BSe3a43FuaMH\u002B7FsZgGcNL8T7ESo0c=\u0022"},{"Name":"Last-Modified","Value":"Sun, 30 Mar 2025 19:09:08 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/PizzaShop/images/0e1d5fe0-ae79-4d63-a528-41b2e5897400_Screenshot (19).nq9ox2naf4.png">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\0e1d5fe0-ae79-4d63-a528-41b2e5897400_Screenshot (19).png'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>

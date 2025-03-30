@@ -56,6 +56,59 @@ public class MenuService : IMenuService
         return _menuRepository.GetItemsByCategoryId(categoryId);
     }
 
+    public MenuCategoryVM GetEditItemViewModel(int itemId)
+    {
+        var item = GetItemById(itemId);
+        if (item == null)
+        {
+            return null; // Return null if item not found
+        }
+
+        var itemModifiers = GetItemModifier(item.ItemId);
+
+        return new MenuCategoryVM
+        {
+            ItemId = item.ItemId,
+            CategoryId = item.CategoryId,
+            ItemName = item.ItemName,
+            ItemtypeId = item.ItemtypeId,
+            Rate = item.Rate,
+            Quantity = item.Quantity,
+            UnitId = item.UnitId,
+            IsAvailable = item.IsAvailable ?? false,
+            TaxDefault = item.TaxDefault,
+            TaxPercentage = item.TaxPercentage,
+            ShortCode = item.ShortCode,
+            Description = item.Description,
+            ModifierGroupId = item.ModifierGroupId,
+            ModifierGroupIds = itemModifiers.Select(m => new ItemModifierVM
+            {
+                ItemId = m.ItemId,
+                ModifierGroupId = m.ModifierGroupId,
+                ModifierGroupName = m.ModifierGroupId != 0 ? GetModifierGroupNameById(m.ModifierGroupId) : "No GroupName",
+                MinSelection = m.MinSelection,
+                MaxSelection = m.MaxSelection,
+                MenuModifiers = GetModifiersByModifierGroupId(m.ModifierGroupId)
+                    .Select(mod => new ModifierVM
+                    {
+                        ModifierId = mod.ModifierId,
+                        ModifierName = mod.ModifierName,
+                        ModifierRate = (decimal)mod.ModifierRate,
+                    }).ToList(),
+                MenuModifierGroupItem = GetModifiersByModifierGroupId(m.ModifierGroupId)
+                    .Select(mod => new MenuModifierGroupVM
+                    {
+                        ModifierId = mod.ModifierId,
+                        ModifierName = mod.ModifierName,
+                        ModifierRate = (decimal)mod.ModifierRate,
+                    }).ToList()
+            }).ToList()
+        };
+    }
+
+    
+
+
     public List<ItemModifierGroup> GetItemModifier(int itemid)
     {
         return _menuRepository.GetItemModifier(itemid);
@@ -142,7 +195,7 @@ public class MenuService : IMenuService
 
     public IPagedList<MenuModifierGroupVM> GetModifiers(UserFilterOptions filterOptions)
     {
-        
+
         var modifier = _menuRepository.GetModifiers().AsQueryable();
         if (!string.IsNullOrEmpty(filterOptions.Search))
         {
@@ -155,7 +208,7 @@ public class MenuService : IMenuService
         int totalTables = modifier.Count();
         int pageSize = filterOptions.PageSize > 0 ? Math.Min(filterOptions.PageSize, totalTables) : 10; // Default 10
 
-       var modifierItems = modifier.Select(item => new MenuModifierGroupVM
+        var modifierItems = modifier.Select(item => new MenuModifierGroupVM
         {
             ModifierGroupId = item.ModifierGroupId ?? 0, // Avoid null exception
             ModifierId = item.ModifierId,
@@ -178,6 +231,11 @@ public class MenuService : IMenuService
     public MenuModifier GetModifierById(int modifierid)
     {
         return _menuRepository.GetModifierById(modifierid);
+    }
+
+    public int GetTotalModifierCount()
+    {
+        return _menuRepository.GetTotalModifierCount();
     }
 
 

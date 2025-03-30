@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {}
+    "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {}
   },
   "projects": {
-    "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {
+    "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj",
+        "projectUniqueName": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj",
+        "projectPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\obj\\",
+        "outputPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config"

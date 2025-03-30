@@ -10,6 +10,8 @@ public interface IMenuRepository
 
   MenuCategory GetCategoryById(int id);
 
+   int GetTotalModifierCount();
+
   void AddCategory(MenuCategory category);
 
   void UpdateCategory(MenuCategoryVM category);

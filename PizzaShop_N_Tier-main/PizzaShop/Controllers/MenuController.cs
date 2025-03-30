@@ -370,14 +370,46 @@ public class MenuController : Controller
 
         var modifiers = _menuService.GetModifiers(filterOptions);
 
-        var modifierVM = new MenuModifierGroupVM
-        {
-            Modifier = modifiers
-        };
-
         return PartialView("_MenuModifierByModifierGroup", modifiers);
     }
-   
+
+
+
+    [Authorize]
+    public IActionResult GetEditAllModifier(int modifierGroupId, UserFilterOptions filterOptions)
+    {
+        filterOptions.Page ??= 1;
+        filterOptions.PageSize = filterOptions.PageSize != 0 ? filterOptions.PageSize : 10; // Default page size
+
+        var pagedModifiers = _menuService.GetModifiers(filterOptions);
+        int totalItems = _menuService.GetTotalModifierCount(); // Implement this in your service
+
+        var associatedModifierIds = _menuService.GetModifiersByModifierGroupId(modifierGroupId)
+            .Select(m => m.ModifierId)
+            .ToList();
+
+        var menuModifierGroup = new MenuModifierGroupVM
+        {
+            ModifierGroupId = modifierGroupId,
+            Modifier = pagedModifiers,
+            ModifierIds = associatedModifierIds
+        };
+
+        var viewModel = new PaginatedViewModel<MenuModifierGroupVM>
+        {
+            Data = menuModifierGroup,
+            PageSize = filterOptions.PageSize,
+            PageNumber = filterOptions.Page.Value,
+            TotalItemCount = totalItems
+        };
+
+        return PartialView("_EditModifierGroupTable", viewModel);
+    }
+
+    
+
+
+
 
     [Authorize]
     public IActionResult GetModifiersByGroup(int groupId, UserFilterOptions filterOptions)
@@ -687,6 +719,7 @@ public class MenuController : Controller
         string shortCode = menuItemData["ShortCode"]?.ToString();
         string description = menuItemData["Description"]?.ToString();
         bool taxDefault = TryParseBool(menuItemData["TaxDefault"]);
+        string ItemPhoto = menuItemData["ItemPhoto"]?.ToString();
 
         // Parse Modifier Groups JSON array safely
         List<ItemModifierGroup> modifierGroups = new List<ItemModifierGroup>();
@@ -711,7 +744,8 @@ public class MenuController : Controller
             TaxPercentage = taxPercentage,
             ShortCode = shortCode,
             Description = description,
-            TaxDefault = taxDefault
+            TaxDefault = taxDefault,
+            CategoryPhoto = ItemPhoto
         };
 
         _menuService.AddMenuItem(menuitem);
@@ -832,7 +866,11 @@ public class MenuController : Controller
             ModifierGroupId = group.ModifierGroupId,
             ModifierGroupName = group.ModifierGroupName,
             ModifierGroupDecription = group.ModifierGroupDecription,
-            ModifierIds = modifiers.Select(m => m.ModifierId).ToList()
+            Modifiers = modifiers.Select(m => new ModifierVM
+            {
+                ModifierId = m.ModifierId,
+                ModifierName = m.ModifierName
+            }).ToList()
         };
 
         return PartialView("_EditModifierGroupPV", viewModel); // Return Partial View
