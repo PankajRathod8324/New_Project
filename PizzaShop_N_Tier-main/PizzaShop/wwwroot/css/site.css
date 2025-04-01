@@ -20,15 +20,3 @@ html {
 body {
   margin-bottom: 60px;
 }
-
-.custom-dropdown {
-  max-height: 200px; /* Enable scrolling */
-  overflow-y: auto;
-  z-index: 1050; /* Keep it above other elements */
-}
-
-#modifierDropdown {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-}

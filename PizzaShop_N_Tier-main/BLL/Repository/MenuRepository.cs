@@ -127,6 +127,7 @@ public class MenuRepository : IMenuRepository
         existingItem.ShortCode = menuItem.ShortCode;
         existingItem.Description = menuItem.Description;
         existingItem.TaxDefault = menuItem.TaxDefault;
+        existingItem.CategoryPhoto = menuItem.CategoryPhoto;
 
         _context.SaveChanges();
         return true;
@@ -198,7 +199,7 @@ public class MenuRepository : IMenuRepository
 
     public IEnumerable<MenuModifierGroup> GetAllModifierGroups()
     {
-        return _context.MenuModifierGroups.ToList();
+        return _context.MenuModifierGroups.Where(m => (bool)!m.IsDeleted).ToList();
     }
 
     public MenuModifierGroup GetModifierGroupById(int id)

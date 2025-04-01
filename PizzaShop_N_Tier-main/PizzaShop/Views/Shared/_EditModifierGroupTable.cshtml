@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Modifier Group</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -27,22 +25,28 @@
             <tbody>
                 @foreach (var menumodifier in Model.Data.Modifier)
                 {
-                   bool isChecked = Model.Data.ModifierIds.Contains(menumodifier.ModifierId); // ✅ Fix this
-// Check if modifier is associated
+                    bool isChecked = Model.Data.ModifierIds.Contains(menumodifier.ModifierId);
 
                     <tr data-id="@menumodifier.ModifierId" data-name="@menumodifier.ModifierName"
                         data-unit="@menumodifier.UnitName" data-rate="@menumodifier.ModifierRate"
                         data-quantity="@menumodifier.Quantity">
                         <td>
                             <div class="d-flex align-items-center">
-                                <input class="checkclass form-check-input me-3" type="checkbox" name="chkItem"
-                                    @(isChecked ? "checked" : "") />
+                                <input class="checkclass form-check-input me-3 modifier-checkbox"
+                                    value="@menumodifier.ModifierId" data-name="@menumodifier.ModifierName" type="checkbox"
+                                    name="chkItem" @(isChecked ? "checked" : "") />
                                 <p class="text-secondary mb-0">@menumodifier.ModifierName</p>
                             </div>
                         </td>
-                        <td><p class="fw-normal mb-1">@menumodifier.UnitName</p></td>
-                        <td><p class="fw-normal mb-1">@menumodifier.ModifierRate</p></td>
-                        <td><p class="fw-normal mb-1">@menumodifier.Quantity</p></td>
+                        <td>
+                            <p class="fw-normal mb-1">@menumodifier.UnitName</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@menumodifier.ModifierRate</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@menumodifier.Quantity</p>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -69,7 +73,8 @@
             <div id="paginationContainer">
                 @if (Model.HasPreviousPage)
                 {
-                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId" data-page="@(Model.PageNumber - 1)">
+                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId"
+                        data-page="@(Model.PageNumber - 1)">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 }
@@ -78,83 +83,98 @@
 
                 @if (Model.HasNextPage)
                 {
-                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId" data-page="@(Model.PageNumber + 1)">
+                    <button class="btn btn-outline-dark pagination-btn-edit" data-id="@Model.Data.ModifierGroupId"
+                        data-page="@(Model.PageNumber + 1)">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 }
             </div>
         </div>
     </div>
-
- <script>
-    $(document).ready(function () {
-        // Initialize selectedModifiers with already associated ModifierIds
-       window.editSelectedModifiers = @Html.Raw(Json.Serialize(Model.Data.ModifierIds));
-
-        console.log("Initial selected modifiers:", window.editSelectedModifiers);
-
-        // Mark checkboxes as checked based on the initialized array
-        $("input[name='chkItem']").each(function () {
-            let modifierId = $(this).closest("tr").data("id");
-            if (window.editSelectedModifiers.includes(modifierId)) {
-                $(this).prop("checked", true);
+    <script>
+        $(document).ready(function () {
+            if (!window.editSelectedModifiers) {
+                window.editSelectedModifiers = [];
             }
-        });
 
-        // Select/Deselect All Checkboxes
-        $("#selectAll").change(function () {
-            $("input[name='chkItem']").prop("checked", this.checked).trigger("change");
-        });
+            console.log("Loaded Page - Selected Modifiers:", window.editSelectedModifiers);
 
-        $(document).on("change", 'input[name="chkItem"]', function () {
-            let modifierId = $(this).closest("tr").data("id");
+            // Restore checkbox states based on the array of selected modifiers
+            restoreCheckboxState();
 
-            if (this.checked) {
-                if (!window.editSelectedModifiers.includes(modifierId)) {
-                    window.editSelectedModifiers.push(modifierId);
+            // Select/Deselect all checkboxes
+            $("#selectAll").change(function () {
+                $("input[name='chkItem']").prop("checked", this.checked).trigger("change");
+            });
+
+            // Handle individual checkbox changes
+            $(document).on("change", 'input[name="chkItem"]', function () {
+                let modifierId = parseInt($(this).val());
+                let modifierName = $(this).data("name") || "Unknown Modifier";
+
+                // If checked, add to array, if unchecked, remove from array
+                if (this.checked) {
+                    if (!window.editSelectedModifiers.some(m => m.id === modifierId)) {
+                        window.editSelectedModifiers.push({ id: modifierId, name: modifierName });
+                    }
+                } else {
+                    window.editSelectedModifiers = window.editSelectedModifiers.filter(m => m.id !== modifierId);
                 }
-            } else {
-                window.editSelectedModifiers = window.editSelectedModifiers.filter(id => id !== modifierId);
-            }
 
-            console.log("Updated selected modifiers:", window.editSelectedModifiers);
+                // Save the selected modifiers to localStorage
+                localStorage.setItem("selectedModifiers", JSON.stringify(window.editSelectedModifiers));
+
+                console.log("Updated selected modifiers:", window.editSelectedModifiers);
+            });
+
+            // Pagination click event
+            $(".pagination-btn-edit").click(function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+                loadModifiers(page);
+            });
+
+            // Page size dropdown change event
+            $("#pageSizeDropdownForModifier").change(function () {
+                loadModifiers(1);
+            });
         });
-        $(".pagination-btn-edit").click(function (e) {
-            e.preventDefault();
-            let page = $(this).data("page");
-            loadModifiers(page);
-        });
 
-        $("#pageSizeDropdownForModifier").change(function () {
-            loadModifiers(1);
-        });
-    });
+        // Function to load modifiers (fetch data and re-render)
+        function loadModifiers(page = 1) {
+            let modifierGroupId = $(".pagination-btn-edit").attr("data-id");
 
-    function loadModifiers(page = 1) {
-        let modifierGroupId = $(".pagination-btn-edit").attr("data-id");
+            $.ajax({
+                url: '/Menu/GetEditAllModifier',
+                type: 'GET',
+                data: { page: page, modifierGroupId: modifierGroupId, pageSize: $("#pageSizeDropdownForModifier").val() },
+                success: function (data) {
+                    $("#modifierTableContainer").html(data);
+                    restoreCheckboxState();  // Ensure checkboxes are correctly restored after new data is loaded
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching modifier list:', error);
+                }
+            });
+        }
 
-        $.ajax({
-            url: '/Menu/GetEditAllModifier',
-            type: 'GET',
-            data: { page: page, modifierGroupId: modifierGroupId, pageSize: $("#pageSizeDropdownForModifier").val() },
-            success: function (data) {
-                console.log("Success");
-                $("#modifierTableContainer").html(data);
-                restoreCheckboxState();
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching modifier list:', error);
-            }
-        });
-    }
+        // Function to restore the checkbox states
+        function restoreCheckboxState() {
+            // Ensure no duplicate entries by checking the state
+            $("input[name='chkItem']").each(function () {
+                let modifierId = parseInt($(this).val());
 
-    function restoreCheckboxState() {
-        window.selectedModifiers.forEach(id => {
-            $(`tr[data-id="${id}"] input[name='chkItem']`).prop("checked", true);
-        });
-    }
-</script>
+                // Check if the modifier is in the selected modifiers array
+                if (window.editSelectedModifiers.some(m => m.id === modifierId)) {
+                    $(this).prop("checked", true); // Set the checkbox to checked
+                } else {
+                    $(this).prop("checked", false); // Uncheck if not in the array
+                }
+            });
 
+            console.log("Checkbox state after restoration:", window.editSelectedModifiers);
+        }
+    </script>
 
 </body>
 

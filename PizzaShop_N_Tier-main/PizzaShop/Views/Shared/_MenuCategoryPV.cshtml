@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PizzaShop</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PizzaShop.styles.css" asp-append-version="true" />
     @* <script src='https://code.jquery.com/jquery-3.7.0.js'></script> *@
@@ -444,7 +444,7 @@
                                             📁 Drag and Drop or Browse files
                                         </label>
                                         <div id="previewContainer" class="mt-2" style="display: none;">
-                                            <img id="imagePreview" src="" alt="Uploaded Image"
+                                            <img id="imagePreview" src="@Model.ItemPhoto" alt="Uploaded Image"
                                                 style="max-width: 100px;">
                                             <span class="remove-image" id="removeImage"
                                                 style="cursor: pointer;">❌</span>
@@ -733,26 +733,61 @@
                         formDataobj[field.name] = field.value;
                     });
 
-                    // Ensure ModifierGroupIdForAdd is an array
-                    formDataobj.ModifierGroupIds = JSON.stringify(selectedModifierGroups); // Convert array to JSON string
+                    // Get the selected image file
+                    var fileInput = $("#uploadImage")[0].files[0]; // Get the selected file
+                    if (fileInput) {
+                        var reader = new FileReader();
+                        console.log("enter");
+                        reader.onloadend = function () {
+                            // Convert the file to base64 and append it to formDataobj
+                            formDataobj["ItemPhoto"] = reader.result;
 
-                    var submissionData = JSON.stringify(formDataobj); // Final JSON string
+                            // Ensure ModifierGroupIdForAdd is an array
+                            formDataobj.ModifierGroupIds = JSON.stringify(selectedModifierGroups); // Convert array to JSON string
 
-                    console.log("Sending data:", submissionData);
+                            var submissionData = JSON.stringify(formDataobj); // Final JSON string
 
-                    $.ajax({
-                        url: '/Menu/AddMenuItem',
-                        type: 'POST',
-                        contentType: "application/json",
-                        data: submissionData,
-                        success: function (response) {
-                            alert("Item Added Successfully!");
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error:', xhr.responseText); // Log detailed error
-                        }
-                    });
+                            console.log("Sending data:", submissionData);
+
+                            // Now that the image is added, send the AJAX request
+                            $.ajax({
+                                url: '/Menu/AddMenuItem',
+                                type: 'POST',
+                                contentType: "application/json",
+                                data: submissionData,
+                                success: function (response) {
+                                    alert("Item Added Successfully!");
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error:', xhr.responseText); // Log detailed error
+                                }
+                            });
+                        };
+
+                        // Read the image file as base64
+                        reader.readAsDataURL(fileInput);
+                    } else {
+                        // If no image is selected, still send the form data without the image
+                        formDataobj.ModifierGroupIds = JSON.stringify(selectedModifierGroups); // Convert array to JSON string
+                        var submissionData = JSON.stringify(formDataobj); // Final JSON string
+
+                        console.log("Sending data:", submissionData);
+
+                        $.ajax({
+                            url: '/Menu/AddMenuItem',
+                            type: 'POST',
+                            contentType: "application/json",
+                            data: submissionData,
+                            success: function (response) {
+                                alert("Item Added Successfully!");
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error:', xhr.responseText); // Log detailed error
+                            }
+                        });
+                    }
                 });
+
 
             // Handle Delete Modifier Group
 
@@ -870,9 +905,9 @@
 
 
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> *@
 
 
 

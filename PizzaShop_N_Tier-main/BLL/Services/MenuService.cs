@@ -315,7 +315,9 @@ public class MenuService : IMenuService
                TaxDefault = item.TaxDefault,
                TaxPercentage = item.TaxPercentage,
                ShortCode = item.ShortCode,
-               Description = item.Description
+               Description = item.Description,
+               ItemPhoto = item.CategoryPhoto
+               
                // UnitName =  item.UnitId.HasValue ? _menuService.GetUnitById(item.UnitId.Value) : "No Unit"
 
            }).ToPagedList(filterOptions.Page.Value, filterOptions.PageSize);

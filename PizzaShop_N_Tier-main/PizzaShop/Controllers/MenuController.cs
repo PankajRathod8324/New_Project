@@ -19,6 +19,7 @@ public class MenuController : Controller
 {
     private readonly IMenuService _menuService;
 
+    private readonly String _imageFolderPath = "wwwroot/images/";
 
     public MenuController(IMenuService menuService)
     {
@@ -122,6 +123,7 @@ public class MenuController : Controller
             ShortCode = item.ShortCode,
             Description = item.Description,
             ModifierGroupId = item.ModifierGroupId,
+            ItemPhoto = item.CategoryPhoto,
             ModifierGroupIds = itemModifiers.Select(m => new ItemModifierVM
             {
                 ItemId = m.ItemId,
@@ -183,7 +185,29 @@ public class MenuController : Controller
         string shortCode = menuItemData["ShortCode"]?.ToString();
         string description = menuItemData["Description"]?.ToString();
         bool taxDefault = TryParseBool(menuItemData["TaxDefault"]);
+        string ItemPhoto = menuItemData["ItemPhoto"]?.ToString();
 
+
+        var base64String = ItemPhoto.Split(',')[1];
+
+        // Convert base64 string to byte array
+        byte[] imageBytes = Convert.FromBase64String(base64String);
+
+        // Generate a unique file name for the image
+        var uniqueFileName = Guid.NewGuid().ToString() + ".jpg"; // Or another image extension
+        var filePath = Path.Combine(_imageFolderPath, uniqueFileName);
+
+        // Ensure the directory exists
+        Directory.CreateDirectory(_imageFolderPath);
+
+        // Save the image to the server using FileStream
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            stream.Write(imageBytes, 0, imageBytes.Length);
+        }
+
+        // Store the relative image path (to store in database)
+        ItemPhoto = "/images/" + uniqueFileName;
         // Parse Modifier Groups JSON array safely
         List<ItemModifierGroup> modifierGroups = new List<ItemModifierGroup>();
         if (menuItemData.ContainsKey("ModifierGroupIds") && menuItemData["ModifierGroupIds"] != null)
@@ -208,7 +232,9 @@ public class MenuController : Controller
             TaxPercentage = taxPercentage,
             ShortCode = shortCode,
             Description = description,
-            TaxDefault = taxDefault
+            TaxDefault = taxDefault,
+            CategoryPhoto = ItemPhoto
+            
         };
 
         bool updateSuccess = _menuService.UpdateMenuItem(menuitem);
@@ -406,7 +432,7 @@ public class MenuController : Controller
         return PartialView("_EditModifierGroupTable", viewModel);
     }
 
-    
+
 
 
 
@@ -564,21 +590,6 @@ public class MenuController : Controller
         return RedirectToAction("Menu", "Home");
     }
 
-    // [HttpPost]
-    // public IActionResult EditCategory(int id)
-    // {
-    //     Console.WriteLine(id);
-    //     // Console.WriteLine(category.CategoryName);
-
-    //     // if (ModelState.IsValid)
-    //     // {
-    //     //     _menuService.UpdateCategory(category);
-    //     //     return RedirectToAction("Menu", "Home");
-    //     // }
-    //     return RedirectToAction("Menu", "Home");
-    // }
-
-
     [Authorize(Policy = "MenuEditPolicy")]
     [HttpPost]
     public IActionResult EditCategory(MenuCategoryVM model)
@@ -638,65 +649,6 @@ public class MenuController : Controller
     }
 
 
-    // [Authorize(Policy = "MenuEditPolicy")]
-    // [HttpPost]
-    // public IActionResult AddMenuItem([FromBody] JsonObject menuItemdata)
-    // {
-    //        // Convert JsonObject to string and deserialize into the ViewModel
-    //         string jsonString = menuItemdata.ToJsonString(); // Correct way to get JSON string
-    //         var menuCategoryVM = JsonConvert.DeserializeObject<MenuCategoryVM>(jsonString);
-
-    //         if (menuCategoryVM == null)
-    //         {
-    //             return BadRequest("Invalid JSON format. Could not parse data.");
-    //         }
-
-    //         Console.WriteLine($"Received Item Name: {menuCategoryVM.ItemName}");
-    //         Console.WriteLine($"Received Modifier Groups: {string.Join(",", menuCategoryVM.ModifierGroupIds)}");
-
-    //         // Step 1: Save Menu Item
-    //         var menuitem = new MenuItem
-    //         {
-    //             CategoryId = menuCategoryVM.CategoryId,
-    //             ItemName = menuCategoryVM.ItemName,
-    //             ItemtypeId = menuCategoryVM.ItemtypeId,
-    //             Rate = menuCategoryVM.Rate,
-    //             Quantity = menuCategoryVM.Quantity,
-    //             UnitId = menuCategoryVM.UnitId,
-    //             IsAvailable = menuCategoryVM.IsAvailable,
-    //             TaxDefault = menuCategoryVM.TaxDefault,
-    //             TaxPercentage = menuCategoryVM.TaxPercentage,
-    //             ShortCode = menuCategoryVM.ShortCode,
-    //             Description = menuCategoryVM.Description
-    //         };
-
-    //         _menuService.AddMenuItem(menuitem);
-
-    //         // Step 2: Save Modifier Groups (if any)
-    //         if (menuCategoryVM.ModifierGroupIds != null && menuCategoryVM.ModifierGroupIds.Any())
-    //         {
-    //             foreach (var modifierGroup in menuCategoryVM.ModifierGroupIds)
-    //             {
-    //                 var menuitemmodifier = new ItemModifierGroup
-    //                 {
-    //                     ItemId = menuitem.ItemId, // Link to menu item
-    //                     ModifierGroupId = modifierGroup.ModifierGroupId,
-    //                     MinSelection = modifierGroup.MinSelection,
-    //                     MaxSelection = modifierGroup.MaxSelection
-    //                 };
-
-    //                 _menuService.AddMenuItemModifierGroup(menuitemmodifier);
-    //             }
-    //         }
-
-    //         TempData["Message"] = "Menu item added successfully!";
-    //         TempData["MessageType"] = "success";
-
-    //         return RedirectToAction("MenuModifier", "Menu");
-
-    // }
-
-
     [HttpPost]
     public IActionResult AddMenuItem([FromBody] JsonObject menuItemData)
     {
@@ -721,6 +673,27 @@ public class MenuController : Controller
         bool taxDefault = TryParseBool(menuItemData["TaxDefault"]);
         string ItemPhoto = menuItemData["ItemPhoto"]?.ToString();
 
+
+        var base64String = ItemPhoto.Split(',')[1];
+
+        // Convert base64 string to byte array
+        byte[] imageBytes = Convert.FromBase64String(base64String);
+
+        // Generate a unique file name for the image
+        var uniqueFileName = Guid.NewGuid().ToString() + ".jpg"; // Or another image extension
+        var filePath = Path.Combine(_imageFolderPath, uniqueFileName);
+
+        // Ensure the directory exists
+        Directory.CreateDirectory(_imageFolderPath);
+
+        // Save the image to the server using FileStream
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            stream.Write(imageBytes, 0, imageBytes.Length);
+        }
+
+        // Store the relative image path (to store in database)
+        ItemPhoto = "/images/" + uniqueFileName;
         // Parse Modifier Groups JSON array safely
         List<ItemModifierGroup> modifierGroups = new List<ItemModifierGroup>();
         if (menuItemData.ContainsKey("ModifierGroupIds") && menuItemData["ModifierGroupIds"] != null)
@@ -787,64 +760,6 @@ public class MenuController : Controller
         return bool.TryParse(value?.ToString(), out bool result) ? result : false;
     }
 
-
-
-    // [HttpPost]
-    // public IActionResult AddMenuModifierGroup(MenuModifierGroup modifierGroup)
-    // {
-
-
-    //     // Console.WriteLine("Hekrkjnhfrkjnfcekjnb" + categoryvm.editCategories.CategoryName);
-
-    //     _menuService.AddModifierGroup(modifierGroup);
-    //     return RedirectToAction("Menu", "Home"); 
-
-    // }
-
-    // [HttpPost]
-    // public IActionResult AddMenuModifierGroup([FromBody] MenuModifierGroupVM model)
-    // {
-    //     Console.WriteLine("Received Data:");
-    //     Console.WriteLine("Modifier Group Name: " + model.ModifierGroupName);
-    //     Console.WriteLine("Modifier Group Description: " + model.ModifierGroupDecription);
-
-    //     // Check if ModifierIds is null or empty
-    //     if (model.ModifierIds == null || !model.ModifierIds.Any())
-    //     {
-    //         Console.WriteLine("No modifiers selected.");
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine("Selected Modifier IDs: " + string.Join(", ", model.ModifierIds));
-    //     }
-
-    //     // 1️⃣ Save Modifier Group
-    //     var modifierGroup = new MenuModifierGroup
-    //     {
-    //         ModifierGroupName = model.ModifierGroupName,
-    //         ModifierGroupDecription = model.ModifierGroupDecription
-    //     };
-    //     _menuService.AddModifierGroup(modifierGroup);
-
-    //     Console.WriteLine("Modifier Group ID: " + modifierGroup.ModifierGroupId);
-
-    //     // 2️⃣ Save Selected Modifiers into the Group
-    //     if (model.ModifierIds != null && model.ModifierIds.Any())
-    //     {
-    //         foreach (var modifierId in model.ModifierIds)
-    //         {
-    //             var menuModifierGroup = new MenuModifier
-    //             {
-    //                 ModifierGroupId = modifierGroup.ModifierGroupId, // Get newly inserted ID
-    //                 ModifierId = modifierId
-    //             };
-    //             _menuService.AddModifier(menuModifierGroup);
-    //         }
-    //     }
-
-    //     return RedirectToAction("Menu", "Home");
-    // }
-
     [HttpGet]
     public IActionResult GetModifierGroup(int id)
     {
@@ -876,8 +791,6 @@ public class MenuController : Controller
         return PartialView("_EditModifierGroupPV", viewModel); // Return Partial View
 
     }
-
-
 
     [Authorize(Policy = "MenuEditPolicy")]
     [HttpPost]
@@ -926,11 +839,13 @@ public class MenuController : Controller
             }
         }
         // 3️⃣ Return Success Response
-        return RedirectToAction("Menu", "Home");
+        var filterOptions = new UserFilterOptions
+        {
+            Page = 1,
+            PageSize = 10 // Default values, adjust as needed
+        };
+        return MenuModifier(modifierGroup.ModifierGroupId, filterOptions);
     }
-
-
-
 
     [Authorize(Policy = "MenuEditPolicy")]
     [HttpPost]
@@ -945,10 +860,10 @@ public class MenuController : Controller
         Console.WriteLine("New Name:" + model.ModifierGroupName);
         Console.WriteLine("New Description:" + model.ModifierGroupDecription);
 
-        if (!ModelState.IsValid)
-        {
-            return Json(new { success = false, message = "Invalid data." });
-        }
+        // if (!ModelState.IsValid)
+        // {
+        //     return Json(new { success = false, message = "Invalid data." });
+        // }
 
         // Fetch existing Modifier Group from DB
         var existingGroup = _menuService.GetModifierGroupById(model.ModifierGroupId);
@@ -970,7 +885,7 @@ public class MenuController : Controller
         var modifiersToRemove = existingModifierIds.Except(model.ModifierIds).ToList();
         foreach (var modifierId in modifiersToRemove)
         {
-            // _menuService.RemoveModifierFromGroup(model.ModifierGroupId, modifierId);
+            _menuService.RemoveCombinedModifierGroup(modifierId, existingGroup.ModifierGroupId);
         }
 
         // Find modifiers to add (New ones that were not in the old list)
@@ -985,25 +900,65 @@ public class MenuController : Controller
             _menuService.AddCombinedModifierGroup(combinedModifier);
         }
 
-        // _menuService.UpdateModifierGroup(existingGroup);
+        var modifierGroupVM = new MenuModifierGroupVM
+        {
+            ModifierGroupId = existingGroup.ModifierGroupId,
+            ModifierGroupName = existingGroup.ModifierGroupName,
+            ModifierGroupDecription = existingGroup.ModifierGroupDecription
+        };
+        _menuService.UpdateModifierGroup(modifierGroupVM);
 
-        return Json(new { success = true, message = "Modifier Group updated successfully!" });
+        var filterOptions = new UserFilterOptions
+        {
+            Page = 1,
+            PageSize = 10 // Default values, adjust as needed
+        };
+        return MenuModifier(modifierGroupVM.ModifierGroupId, filterOptions);
+
     }
-
-
 
     [Authorize(Policy = "MenuDeletePolicy")]
     [HttpPost]
-    public IActionResult DeleteModifierGroup(int id)
+    public IActionResult DeleteModifierGroup(int groupId)
     {
-        Console.WriteLine("tHIS IS iD: " + id);
-        var modifierGroup = _menuService.GetModifierGroupById(id);
-        _menuService.DeleteModifierGroup(modifierGroup);
+        Console.WriteLine("This is ID to delete: " + groupId);
+
+        // Get all modifier groups sorted by ID
+        var allGroups = _menuService.GetAllModifierGroups()
+                                    .OrderBy(mg => mg.ModifierGroupId)
+                                    .ToList();
+
+        // Find index of the current group
+        var currentIndex = allGroups.FindIndex(mg => mg.ModifierGroupId == groupId);
+
+        // Find the previous group's ID (if available)
+        int? previousGroupId = null;
+        if (currentIndex > 0) // Ensure there's a previous group
+        {
+            previousGroupId = allGroups[currentIndex - 1].ModifierGroupId;
+        }
+
+        // Delete the current modifier group
+        var modifierGroup = _menuService.GetModifierGroupById(groupId);
+        if (modifierGroup != null)
+        {
+            _menuService.DeleteModifierGroup(modifierGroup);
+        }
+
+        // Set success message
         TempData["Message"] = "Modifier Group deleted successfully!";
         TempData["MessageType"] = "error";
-        return RedirectToAction("Menu", "Home");
-    }
 
+        Console.WriteLine("Previous Group ID: " + (previousGroupId.HasValue ? previousGroupId.ToString() : "None"));
+
+        // Redirect or return data
+        var filterOptions = new UserFilterOptions
+        {
+            Page = 1,
+            PageSize = 10 // Default values, adjust as needed
+        };
+        return MenuModifier((int)previousGroupId, filterOptions);// Pass previousGroupId to reload view with it
+    }
 
     [Authorize(Policy = "MenuEditPolicy")]
     public IActionResult AddMenuModifier(MenuModifierGroupVM menuModifier)
@@ -1063,9 +1018,6 @@ public class MenuController : Controller
 
         return Json(new { success = true, message = "Modifier Added Successfully!" });
     }
-
-
-
 
     public IActionResult EditMenuModifier(int modifierid)
     {
@@ -1175,8 +1127,6 @@ public class MenuController : Controller
         return Json(new { success = true, message = "Modifier updated successfully!" });
     }
 
-
-
     public IActionResult DeleteModifier([FromBody] List<MenuModifier> modifiers)
     {
         Console.WriteLine("HEEJNJKFNJN");
@@ -1197,12 +1147,6 @@ public class MenuController : Controller
 
         return RedirectToAction("Menu", "Home");
     }
-
-
-
-
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

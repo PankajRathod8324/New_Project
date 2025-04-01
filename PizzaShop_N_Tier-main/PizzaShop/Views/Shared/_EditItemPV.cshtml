@@ -133,11 +133,17 @@
                                 <!-- Upload Image -->
                                 <div class="col-12">
                                     <label for="uploadImage" class="form-label">Upload Image</label>
-                                    <div class="border p-3 text-center" style="border-style: dotted;">
+                                    <div class="border p-3 text-center" id="dropArea" style="border-style: dotted; cursor: pointer;">
                                         <input type="file" id="uploadImage" class="d-none">
                                         <label for="uploadImage" class="text-muted" style="cursor: pointer;">
                                             📁 Drag and Drop or Browse files
                                         </label>
+                                         <div id="previewContainer" class="mt-2" style="display: none;"></div>
+                                            <img id="imagePreview" src="@Model.ItemPhoto" alt="Uploaded Image"
+                                                style="max-width: 100px;">
+                                            <span class="remove-image" id="removeImage"
+                                                style="cursor: pointer;">❌</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
