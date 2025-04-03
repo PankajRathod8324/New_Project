@@ -30,9 +30,11 @@
             }
         </td>
         <td>
-            <a class="text-black" asp-area="" asp-controller="User" asp-action="Edituser" asp-route-id="@user.UserId">
+            <a class="text-black" permission="UserEdit" asp-controller="User" asp-action="EditUser"
+                asp-route-id="@user.UserId">
                 <i class="fa-solid fa-marker"></i>
             </a>
+
             <i class="fa-regular fa-trash-can ms-4" data-bs-toggle="modal" data-bs-target="#@modalId"></i>
             <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">

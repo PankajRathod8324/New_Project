@@ -108,7 +108,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 
-builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, PermissionHandler>();
 
 // 🔥 Configure Role-Based Authorization
 // builder.Services.AddAuthorization(options =>

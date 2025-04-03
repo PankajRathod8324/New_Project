@@ -18,26 +18,26 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
         _context = context;
     }
 
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
     {
         var user = _httpContextAccessor.HttpContext.User;
 
-        if (user == null)
+        if (user == null || !user.Identity.IsAuthenticated)
         {
-            Console.WriteLine(" No user found in context.");
-            return Task.CompletedTask;
+            Console.WriteLine(" No authenticated user found.");
+            return;
         }
 
         var roleClaim = user.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
         if (roleClaim == null)
         {
-            Console.WriteLine(" Role claim not found in user claims.");
-            return Task.CompletedTask;
+            Console.WriteLine(" Role claim not found.");
+            return;
         }
 
         Console.WriteLine($" User Role: {roleClaim}");
 
-        var userPermissions = GetPermissionsForRole(roleClaim);
+        var userPermissions = await GetPermissionsForRoleAsync(roleClaim);
 
         Console.WriteLine($"Permissions found for role {roleClaim}: {userPermissions.Count}");
 
@@ -46,41 +46,31 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
             Console.WriteLine($"Fetched Permission: {perm.PermissionName} | CanView: {perm.CanView} | CanAddEdit: {perm.CanAddEdit} | CanDelete: {perm.CanDelete}");
         }
 
-        if (requirement.Permission.EndsWith("_View"))
+        bool hasPermission = requirement.Permission switch
         {
-            if (userPermissions.Any(p => p.PermissionName == requirement.Permission.Replace("_View", "") && p.CanView == true))
-            {
-                Console.WriteLine($"Permission granted to VIEW: {requirement.Permission}");
-                context.Succeed(requirement);
-            }
-        }
-        else if (requirement.Permission.EndsWith("_Edit"))
+            string perm when perm.EndsWith("_View") => 
+                userPermissions.Any(p => p.PermissionName == perm.Replace("_View", "") && (bool)p.CanView),
+            string perm when perm.EndsWith("_Edit") => 
+                userPermissions.Any(p => p.PermissionName == perm.Replace("_Edit", "") && (bool)p.CanAddEdit),
+            string perm when perm.EndsWith("_Delete") => 
+                userPermissions.Any(p => p.PermissionName == perm.Replace("_Delete", "") && (bool)p.CanDelete),
+            _ => false
+        };
+
+        if (hasPermission)
         {
-            if (userPermissions.Any(p => p.PermissionName == requirement.Permission.Replace("_Edit", "") && p.CanAddEdit == true))
-            {
-                Console.WriteLine($"Permission granted to EDIT: {requirement.Permission}");
-                context.Succeed(requirement);
-            }
-        }
-        else if (requirement.Permission.EndsWith("_Delete"))
-        {
-            if (userPermissions.Any(p => p.PermissionName == requirement.Permission.Replace("_Delete", "") && p.CanDelete == true))
-            {
-                Console.WriteLine($"Permission granted to DELETE: {requirement.Permission}");
-                context.Succeed(requirement);
-            }
+            Console.WriteLine($"Permission granted: {requirement.Permission}");
+            context.Succeed(requirement);
         }
         else
         {
-            Console.WriteLine($"Permission denied for: {requirement.Permission}");
+            Console.WriteLine($"Permission denied: {requirement.Permission}");
         }
-
-        return Task.CompletedTask;
     }
 
-    private List<PermissionVM> GetPermissionsForRole(string role)
+    private async Task<List<PermissionVM>> GetPermissionsForRoleAsync(string role)
     {
-        var permissions = _context.Permissions
+        return await _context.Permissions
             .Include(p => p.Role)
             .Where(p => p.Role != null && p.Role.RoleName == role)
             .Select(p => new PermissionVM
@@ -92,10 +82,6 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
                 CanAddEdit = p.CanAddEdit,
                 CanDelete = p.CanDelete
             })
-            .ToList();
-
-        Console.WriteLine($" Permissions found for role {role}: {permissions.Count}");
-
-        return permissions;
+            .ToListAsync();
     }
 }

@@ -5579,6 +5579,88 @@
       ]
     },
     {
+      "Route": "images/d83b2b40-72ab-4bbe-88f9-bdb4c65852f4.jpg",
+      "AssetFile": "images/d83b2b40-72ab-4bbe-88f9-bdb4c65852f4.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "878669"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SbxHQhQEUs6Ng+Se3a43FuaMH+7FsZgGcNL8T7ESo0c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 01 Apr 2025 22:41:47 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-SbxHQhQEUs6Ng+Se3a43FuaMH+7FsZgGcNL8T7ESo0c="
+        }
+      ]
+    },
+    {
+      "Route": "images/d83b2b40-72ab-4bbe-88f9-bdb4c65852f4.nwau5fnicj.jpg",
+      "AssetFile": "images/d83b2b40-72ab-4bbe-88f9-bdb4c65852f4.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "878669"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SbxHQhQEUs6Ng+Se3a43FuaMH+7FsZgGcNL8T7ESo0c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 01 Apr 2025 22:41:47 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nwau5fnicj"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-SbxHQhQEUs6Ng+Se3a43FuaMH+7FsZgGcNL8T7ESo0c="
+        },
+        {
+          "Name": "label",
+          "Value": "images/d83b2b40-72ab-4bbe-88f9-bdb4c65852f4.jpg"
+        }
+      ]
+    },
+    {
       "Route": "images/dd9bbf2b-a266-4620-9cb2-13d979b1e10f_Screenshot (11).png",
       "AssetFile": "images/dd9bbf2b-a266-4620-9cb2-13d979b1e10f_Screenshot (11).png",
       "Selectors": [],
