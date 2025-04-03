@@ -828,6 +828,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\41568d49-fe81-4055-83bd-65b5d8e50045_8efc06e3-498b-4d1a-8c32-ee0db2e0dee1_2aa885e5-d87a-44cb-ab5c-5562d03b0a1e_9e8264e7-8285-4f08-9789-a6dff505f6c7_Screenshot (6).png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\43673fb6-3998-48b4-90d5-1e681f84d723.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>PizzaShop</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/PizzaShop</BasePath>
+      <RelativePath>images/43673fb6-3998-48b4-90d5-1e681f84d723.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>vaapyqft85</Fingerprint>
+      <Integrity>mcW2bQD5n2nfY3lCK0FEr806o9HxZtbMUCT37m9qH7k=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\43673fb6-3998-48b4-90d5-1e681f84d723.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\478876b3-ab98-4642-a2c4-389d366ce6d4_Screenshot (13).png'))">
       <SourceType>Package</SourceType>
       <SourceId>PizzaShop</SourceId>
@@ -1008,6 +1026,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\728355ab-98e8-4cb1-9a01-01112ad4f00e_Screenshot (7).png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\74681e89-4a9b-4cd6-8240-b6424be1ec69_pic-1.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>PizzaShop</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/PizzaShop</BasePath>
+      <RelativePath>images/74681e89-4a9b-4cd6-8240-b6424be1ec69_pic-1.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ha7qnoapcq</Fingerprint>
+      <Integrity>aV5+HaGJbDIFGEHUsIE0EzvugILs+D4NHil8MV9nfzQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\74681e89-4a9b-4cd6-8240-b6424be1ec69_pic-1.png'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\87a5224b-be3f-48d1-ad95-77bd51bb7953_Screenshot (21).png'))">
       <SourceType>Package</SourceType>
       <SourceId>PizzaShop</SourceId>
@@ -1025,6 +1061,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\87a5224b-be3f-48d1-ad95-77bd51bb7953_Screenshot (21).png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\8d8c9586-5564-43b5-9090-abd74460d4fa_pic-2.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>PizzaShop</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/PizzaShop</BasePath>
+      <RelativePath>images/8d8c9586-5564-43b5-9090-abd74460d4fa_pic-2.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>3z9ntofo2k</Fingerprint>
+      <Integrity>Px+hIUUwyXtpixuFZR3p2V1TDWAphE7MHRO+gAnpMss=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\8d8c9586-5564-43b5-9090-abd74460d4fa_pic-2.png'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\8efc06e3-498b-4d1a-8c32-ee0db2e0dee1_2aa885e5-d87a-44cb-ab5c-5562d03b0a1e_9e8264e7-8285-4f08-9789-a6dff505f6c7_Screenshot (6).png'))">
       <SourceType>Package</SourceType>

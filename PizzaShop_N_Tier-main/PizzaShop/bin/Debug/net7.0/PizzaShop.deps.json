@@ -2898,6 +2898,7 @@
           "Microsoft.AspNetCore.Session": "2.3.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.4",
           "Microsoft.IdentityModel.Tokens": "7.0.3",
+          "Newtonsoft.Json": "13.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.4",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
           "System.IdentityModel.Tokens.Jwt": "7.0.3",

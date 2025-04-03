@@ -12,8 +12,9 @@
     <title>@ViewData["Title"] - PizzaShop</title>
     @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PizzaShop.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" /> *@
     @* <script src='https://code.jquery.com/jquery-3.7.0.js'></script> *@
+
 </head>
 
 <body>
@@ -50,7 +51,7 @@
                         <div class="overflow-y-scroll  mt-3" style="max-width: 1000px; max-height: 600px;">
                             @foreach (var category in Model.menuCategories)
                             {
-                                <div class="row hoverDiv">
+                                <div class="row hoverDivCategory">
                                     <div class="col">
                                         <p class="fs-5"><i class="fa-solid fa-grip-vertical me-2"></i>@category.CategoryName
                                         </p>
@@ -99,11 +100,10 @@
                 @foreach (var category in Model.menuCategories)
                 {
                     var modalId = "deleteModal" + category.CategoryId;
-                    <div class="row hoverDiv">
+                    <div class="row hoverDivCategory" data-id="@category.CategoryId">
                         <div class="col-9">
                             <p class="fs-5" data-id="@category.CategoryId">
-                                <i class="category-link fa-solid fa-grip-vertical me-2"
-                                    data-id="@category.CategoryId"></i>@category.CategoryName
+                                <i class=" fa-solid fa-grip-vertical me-2"></i>@category.CategoryName
                             </p>
 
 
@@ -508,7 +508,7 @@
                 loadModifiers(page);
             });
 
-            var selectedCategoryId = null;
+            var selectedCategoryId = 0;
             console.log(selectedCategoryId);
 
             $.ajax({
@@ -525,12 +525,12 @@
                 }
             });
 
-            $(".category-link").click(function () {
+            $(".hoverDivCategory").click(function () {
+                $(".hoverDivCategory").removeClass("active");
+                $(this).addClass("active");
+                console.log("hello i am in");
                 selectedCategoryId = $(this).data("id");
                 var categoryId = selectedCategoryId;
-                @* console.log(categoryId); *@
-                    $(this).addClass("active");
-
                 loadMenuItems();
             });
             var selectedModifierGroups = [];

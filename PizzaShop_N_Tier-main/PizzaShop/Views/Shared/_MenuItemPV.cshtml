@@ -64,9 +64,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <img src="~/assest/icons/@(menuitem.ItemtypeId == 1 ? "veg-icon.svg" : "non-veg-icon.svg")"
+                                    <img src="~/assest/icons/@(menuitem.ItemtypeId == 1 ? "veg-icon.svg" : (menuitem.ItemtypeId == 2 ? "non-veg-icon.svg": "vegan-icon.svg"))"
                                         class="rounded-circle" style="width: 24px; height: 24px;" />
-                                </td>
                                 <td>
                                     <p class="fw-bold text-dark mb-0">@menuitem.Rate</p>
                                 </td>
@@ -192,25 +191,25 @@
 
 
     <script>
-        let selectedItemId; 
+        let selectedItemId = 0;
 
         function setDeleteItemId(itemId) {
-            selectedItemId = itemId; 
+            selectedItemId = itemId;
         }
 
         $(document).ready(function () {
 
             $("#pageSizeDropdown").change(function (event) {
-                event.preventDefault(); 
+                event.preventDefault();
 
-                var selectedPageSize = $(this).val(); 
-                var categoryId = $(this).data("categoryid"); 
-                var currentPage = 1; 
+                var selectedPageSize = $(this).val();
+                var categoryId = $(this).data("categoryid");
+                var currentPage = 1;
                 console.log("dropdown");
 
 
                 $.ajax({
-                    url: '@Url.Action("MenuItem", "Menu")', 
+                    url: '@Url.Action("MenuItem", "Menu")',
                     type: 'GET',
                     data: {
                         categoryId: categoryId,
@@ -218,15 +217,15 @@
                         PageNumber: currentPage
                     },
                     beforeSend: function () {
-                        $("#pageSizeDropdown").prop("disabled", true); 
+                        $("#pageSizeDropdown").prop("disabled", true);
                     },
                     success: function (data) {
-                        $("#menuItemsContainer").html(data); 
-                        $("#pageSizeDropdown").prop("disabled", false); 
+                        $("#menuItemsContainer").html(data);
+                        $("#pageSizeDropdown").prop("disabled", false);
                     },
                     error: function () {
                         alert("Failed to update items per page.");
-                        $("#pageSizeDropdown").prop("disabled", false); 
+                        $("#pageSizeDropdown").prop("disabled", false);
                     }
                 });
             });

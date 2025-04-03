@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using DAL.Models;
 using DAL.ViewModel;
@@ -15,7 +16,7 @@ public interface IMenuService
 
   void UpdateCategory(MenuCategoryVM category);
 
-   int GetTotalModifierCount();
+  int GetTotalModifierCount();
 
   void DeleteCategory(MenuCategory category);
   List<MenuItem> GetItemsByCategoryId(int categoryId);
@@ -76,5 +77,15 @@ public interface IMenuService
 
   public void AddModifier(MenuModifier modifier);
   void DeleteModifiers(List<MenuModifier> modifiers);
+
+  MenuCategoryVM GetEditMenuItemViewModel(int itemId);
+  
+  ServiceResult AddMenuItem(JsonObject menuItemData);
+
+  ServiceResult UpdateMenuItemFromJson(JsonObject menuItemData, string imageFolderPath);
+
+   int? AddModifierGroupWithModifiers(MenuModifierGroupVM model);
+
+   bool UpdateModifierGroupWithModifiers(MenuModifierGroupVM model);
 
 }

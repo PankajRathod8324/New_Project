@@ -4544,6 +4544,7 @@
           "Microsoft.AspNetCore.Session": "2.3.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.4",
           "Microsoft.IdentityModel.Tokens": "7.0.3",
+          "Newtonsoft.Json": "13.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.4",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
           "System.IdentityModel.Tokens.Jwt": "7.0.3",
@@ -12699,11 +12700,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\PizzaShop.csproj",
+      "projectUniqueName": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\PizzaShop.csproj",
       "projectName": "PizzaShop",
-      "projectPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\PizzaShop.csproj",
+      "projectPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\PizzaShop.csproj",
       "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-      "outputPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\obj\\",
+      "outputPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\PizzaShop\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -12718,11 +12719,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {
-              "projectPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj"
+            "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj": {
+              "projectPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\BLL\\BLL.csproj"
             },
-            "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\DAL\\DAL.csproj": {
-              "projectPath": "d:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\DAL\\DAL.csproj"
+            "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\DAL\\DAL.csproj": {
+              "projectPath": "D:\\PizzaShop_N_Tier-main (1)\\PizzaShop_N_Tier-main\\DAL\\DAL.csproj"
             }
           }
         }
